@@ -1,0 +1,35 @@
+package <%= package_name %>;
+
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.io.PrintStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import run_bug_run.SubmissionOutputMatcher;
+
+public class <%= test_class_name %> {
+
+    <% tests.each do |test| %>
+    @Test
+    public void test<%= test.id %>() throws Exception {
+        byte[] outputBytes = Files.readAllBytes(Paths.get(this.getClass().getResource("/output<%= test.id %>.txt").toURI()));
+        String output = new String(outputBytes, StandardCharsets.UTF_8);
+
+        InputStream in = this.getClass().getResourceAsStream("/input<%= test.id %>.txt");
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
+
+        <%= submission.main_class %>.main(new String[]{});
+        String actualOutput = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        assertTrue(String.format("Test <%= test.id %> (%s matches %s)", actualOutput, output), SubmissionOutputMatcher.isMatch(output, actualOutput, "<%= bug.problem_id %>"));
+    }
+
+    <% end %>
+}
