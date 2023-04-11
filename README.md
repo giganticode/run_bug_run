@@ -3,10 +3,6 @@
   <img src="docs/logo.png">
 </p>
 
-
-> **Warning**
-> RunBugRun is in an early stage. The full code and data will follow in the next weeks
-
 ## What is RunBugRun
 
 RunBugRun is an [APR](http://program-repair.org/) dataset of ~450'000 executable buggy/fixed pairs of short programs taken from [IBM Project CodeNet](https://github.com/IBM/Project_CodeNet) written in 8 languages (C++, C, Python, Java, Ruby, JavaScript, Go, PHP).
@@ -20,36 +16,58 @@ RunBugRun has pre-defined training, validation and test sets. APR tools can use 
 ## Installation
 
 ### Data
-RunBugRun's data can be downloaded in the form of gzipped JSONL files (**links will follow**). However, we strongly recommend to use the corresponding infrastructure (see below).
+RunBugRun's data can be downloaded in the form of gzipped JSONL files from [here](https://github.com/giganticode/run_bug_run_data) or downloaded directly with the `rbugr` utility.
 
-### Infrastructure
+### `rbugr`
 
-RunBugRun's infrastructure is written in Ruby and can be installed as a RubyGem (**Note:** Gem has not yet published).
+As of today, we only support Ubuntu 22.04. For other distributions, please open an issue.
+The `rbugr` utility is written in Ruby.
+You'll need a recent version of Ruby (3.1) on your system (installed e.g. through [`rbenv`](https://github.com/rbenv/rbenv)).
+In addition to a Ruby to run the utility, you'll need a Ruby to run Ruby submission programs. Here version 3.0, the version packaged by Ubuntu, is sufficient.
 
-The gem can be installed using:
+#### Prerequisities
+Use the following to install the compilers/interpreters needed to run submission programs:
+```
+$ apt-get install php-cli nodejs gcc g++ default-jdk ruby python3 golang-go bubblewrap
+```
 
-`$ gem install run_bug_run`
+#### Installation
+In order to install the utility itself do:
+```
+$ git clone https://github.com/giganticode/run_bug_run.git
+$ cd https://github.com/giganticode/run_bug_run.git
+$ gem install bundler
+$ bundle install
+```
 
 ## Usage
 
 ### Download data
 
 The `rbugr` helper utility can be used to manage dataset versions, obtain information on bugs, run bugs or evaluate the entire test set. 
-
 To download the RunBugRun data at a particular version use:
 
-`$ rbugr download 0.0.1`
+```
+$ bundle exec rbugr download 0.0.1
+```
+
+### Sanity Check
+
+It is advised to do a sanity check of your setup by evaluating the *fixed* program versions.
+```
+$ bundle exec rbugr eval --fixed --output-filename=sanity_check.json.gz
+```
 
 ### Showing Bug Information
 
 To show information on a particular bug
 use
 
-`$ rbugr bugs show BUG_ID`
+`$ bundle exec rbugr bugs show BUG_ID`
 
 For instance:
 
-`$ rbugr bugs show 4229`
+`$ bundle exec rbugr bugs show 4229`
 
 will give:
 <pre>{
@@ -66,7 +84,7 @@ will give:
 
 ### Printing a Diff
 
-`$ rbugr bugs diff 42290`
+`$ bundle exec rbugr bugs diff 42290`
 
 <pre> #include &lt;bits/stdc++.h&gt;
  
@@ -113,14 +131,21 @@ will give:
 
 In order to evaluate your tool's output use the following
 
-`$ rbugr eval PATH_TO_OUTPUT`
+`$ bundle exec rbugr eval PATH_TO_OUTPUT --output-filename=PATH_TO_EVAL_FILE`
 
 where `PATH_TO_OUTPUT` should point to your tool's output file. This file should be a JSON**L** file in the following format:
 
 ```
 {id: BUG_ID, preds: [FIX_CANDIDATE_CODE1, FIX_CANDIDATE_CODE2, ...]}
 ...
-
-
-
 ```
+
+### Analysis of Evaluation
+
+Once evaluated you can use `rbugr analyze` to calculate various evaluation metrics.
+For instance:
+```
+$ bundle exec rbugr analyze PATH_TO_EVAL_FILE
+```
+You can use `--by-language` to get a per-language break-down of performance.
+
