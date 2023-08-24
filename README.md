@@ -3,6 +3,9 @@
   <img src="docs/logo.png">
 </p>
 
+[!WARNING]  
+RunBugRun is currently being revisied. The split will change and should not be relied on.
+
 ## What is RunBugRun
 
 RunBugRun is an [APR](http://program-repair.org/) dataset of ~450'000 executable buggy/fixed pairs of short programs taken from [IBM Project CodeNet](https://github.com/IBM/Project_CodeNet) written in 8 languages (C++, C, Python, Java, Ruby, JavaScript, Go, PHP).
