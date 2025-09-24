@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift("#{__dir__}/../lib")
+
+require 'optparse'
+require 'run_bug_run'
+require 'run_bug_run/cli'
+
+RunBugRun::CLI::Main.start
+

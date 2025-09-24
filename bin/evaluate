@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "run_bug_run"
+require "run_bug_run/bug"
+require "run_bug_run/test"
+require "run_bug_run/json_utils"
+
+RunBugRun.initialize_database
+
+bugs = RunBugRun::Bug
+
+evaluator = RunBugRun::Evaluator.new bugs
+evaluator.evaluate! 

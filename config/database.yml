@@ -1,0 +1,7 @@
+development:
+  adapter: sqlite3
+  database: db/development.db
+  pool: 64
+  timeout: 1000
+  checkout_timeout: 20
+  
